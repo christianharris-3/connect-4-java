@@ -1,7 +1,6 @@
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.layout.VBox;
-import javafx.scene.control.Button;
 import javafx.geometry.Insets;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
@@ -10,13 +9,12 @@ public class GUI extends Application{
     @Override
     public void start(Stage stage) {
 
-        Button button = new Button("basic button");
         GameGrid grid = new GameGrid();
 
-        VBox root = new VBox(button,grid);
+        VBox root = new VBox(grid);
         root.setSpacing(20);
         root.setAlignment(Pos.CENTER);
-//        root.setMargin(new Insets(10,10,10,10));
+        root.setPadding(new Insets(20,20,20,20));
         Scene scene = new Scene(root);
 
         stage.setScene(scene);
