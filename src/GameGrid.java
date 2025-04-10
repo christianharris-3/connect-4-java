@@ -16,12 +16,13 @@ public class GameGrid extends VBox {
     private final int squareWidth = 80;
     private final int squareHeight = 80;
     private final int[][] searchDirections = {{1,0},{1,1},{0,1},{-1,1},{-1,0},{-1,-1},{0,-1},{1,-1}};
-    private final String[] PLAYER_COL = new String[] {"None","Blue", "Red"};
 
     private final HBox titleBar;
     private final GridPane gridWidget;
     private final Label titleText;
     private final Button resetButton;
+
+    private final AIPlayer computer;
 
     public int[][] grid;
     public boolean player1go = true;
@@ -46,6 +47,8 @@ public class GameGrid extends VBox {
 
         setFormating();
         generateGrid();
+
+        computer = new AIPlayer();
     }
 
     private void setFormating() {
@@ -55,6 +58,7 @@ public class GameGrid extends VBox {
         titleBar.setAlignment(Pos.CENTER);
         titleBar.setSpacing(40);
         titleText.setStyle("-fx-font-size: 30;");
+        gridWidget.setAlignment(Pos.CENTER);
     }
     private void generateGrid() {
         gridWidget.getChildren().clear();
@@ -122,6 +126,9 @@ public class GameGrid extends VBox {
         } else {
             animating = false;
             winDetection();
+            if (!player1go) {
+                dropOnColumn(computer.getMove(grid));
+            }
         }
         generateGrid();
     }
