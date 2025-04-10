@@ -23,6 +23,7 @@ public class GameGrid extends VBox {
     private final Button resetButton;
 
     private final AIPlayer computer;
+    private final AIPlayer computer2;
 
     public int[][] grid;
     public boolean player1go = true;
@@ -48,7 +49,8 @@ public class GameGrid extends VBox {
         setFormating();
         generateGrid();
 
-        computer = new AIPlayer();
+        computer = new AIPlayer(1);
+        computer2 = new AIPlayer(2);
     }
 
     private void setFormating() {
@@ -126,9 +128,14 @@ public class GameGrid extends VBox {
         } else {
             animating = false;
             winDetection();
-            if (!player1go) {
-                dropOnColumn(computer.getMove(grid));
+            if (gameWinner==0) {
+                if (!player1go) {
+                    dropOnColumn(computer.getMove(grid));}
+//                } else {
+//                    dropOnColumn(computer2.getMove(grid));
+//                }
             }
+
         }
         generateGrid();
     }
@@ -146,24 +153,7 @@ public class GameGrid extends VBox {
         return moved;
     }
     private void winDetection() {
-        for (int j=0;j<height;j++) {
-            for (int i=0;i<width;i++) {
-                for (int[] dir : searchDirections) {
-                    int dis = -1;
-                    int matchCol = grid[j][i];
-                    if (matchCol != 0) {
-                        int[] pos;
-                        do {
-                            dis+=1;
-                            pos = new int[] {i + dir[0] * dis, j + dir[1] * dis};
-                        } while (pos[0]>=0 && pos[1]>=0 && pos[0]<width && pos[1]<height && matchCol==grid[pos[1]][pos[0]]);
-                    }
-                    if (dis>=4) {
-                        gameWinner = matchCol;
-                    }
-                }
-            }
-        }
+        gameWinner = GridEval.detectWin(grid);
         generateGrid();
     }
     public void reset() {

@@ -1,8 +1,10 @@
+import java.util.Arrays;
+
 public class GridEval {
     private final int width;
     private final int height;
     private final int[][] gridValues;
-    private final int[][] searchDirections = {{1,0},{1,1},{0,1},{-1,1}};
+    private final static int[][] searchDirections = {{1,0},{1,1},{0,1},{-1,1}};
 
     public GridEval() {
         this(7, 6);
@@ -29,20 +31,53 @@ public class GridEval {
                 }
             }
         }
-        for (int j=0;j<height;j++) {
-            for (int i = 0; i < width; i++) {
-                System.out.print(gridValues[j][i]+"-");
-            }
-            System.out.println();
-        }
+//        for (int j=0;j<height;j++) {
+//            for (int i = 0; i < width; i++) {
+//                System.out.print(gridValues[j][i]+"-");
+//            }
+//            System.out.println();
+//        }
     }
     public int evaluate(int[][] grid) {
         int total = 0;
+        int winner = detectWin(grid);
+        if (winner == 1) {
+            return 10000;
+        } else if (winner == 2) {
+            return -10000;
+        }
         for (int j=0;j<height;j++) {
             for (int i=0;i<width;i++) {
-                total += gridValues[j][i]*(-1.5*grid[j][i]*grid[j][i]+2.5*grid[j][i]);
+                if (grid[j][i] == 1) {
+                    total += gridValues[j][i];
+                } else if (grid[j][i] == 2) {
+                    total -= gridValues[j][i];
+                }
             }
         }
         return total;
+    }
+    public static int detectWin(int[][] grid) {
+        int height = grid.length;
+        int width = grid[0].length;
+        for (int j=0;j<height;j++) {
+            for (int i=0;i<width;i++) {
+                for (int[] dir : searchDirections) {
+                    int dis = -1;
+                    int matchCol = grid[j][i];
+                    if (matchCol != 0) {
+                        int[] pos;
+                        do {
+                            dis+=1;
+                            pos = new int[] {i + dir[0] * dis, j + dir[1] * dis};
+                        } while (pos[0]>=0 && pos[1]>=0 && pos[0]<width && pos[1]<height && matchCol==grid[pos[1]][pos[0]]);
+                    }
+                    if (dis>=4) {
+                        return matchCol;
+                    }
+                }
+            }
+        }
+        return 0;
     }
 }
